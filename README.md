@@ -64,13 +64,16 @@ It also supports features like **pinning**, **category filters**, **Markdown con
 ### ⚠️ Firebase Field Errors
 **Problem:** Missing Firestore fields caused runtime errors.  
 **Fix:** Used null-aware operators: `data['key'] ?? defaultValue`.
-![WhatsApp Image 2025-06-17 at 11 48 56 PM (2)](https://github.com/user-attachments/assets/392ef0cb-e41b-4b5e-8db3-6284e2776355)
-![WhatsApp Image 2025-06-17 at 11 48 56 PM (1)](https://github.com/user-attachments/assets/0d6aa876-448c-4234-8eef-92b95b9277c2)
-![WhatsApp Image 2025-06-17 at 11 48 56 PM](https://github.com/user-attachments/assets/a6394d40-aa68-4bff-ba66-d353178c822a)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (3)](https://github.com/user-attachments/assets/7c354832-61ea-4bc8-8dff-acc6daf0a34b)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (2)](https://github.com/user-attachments/assets/211a84ad-a46c-4565-a716-570c6c2cbe09)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (1)](https://github.com/user-attachments/assets/703ff595-5575-4e27-90da-ac3f20825cf3)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM](https://github.com/user-attachments/assets/d983aa15-c2a5-4654-b881-f4aa459db3fd)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM](https://github.com/user-attachments/assets/6859f81a-2667-4567-bbe3-b78b306fd49f)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM (1)](https://github.com/user-attachments/assets/b23e949f-4dde-438a-b9b8-6eef0d409427)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM (2)](https://github.com/user-attachments/assets/deb85160-467b-44ea-a549-a496d8184d38)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM (3)](https://github.com/user-attachments/assets/7f938515-cd84-40df-a0e9-765073f02479)
+![WhatsApp Image 2025-06-17 at 11 48 56 PM](https://github.com/user-attachments/assets/95c1eb9b-d07d-4216-b985-cb3599ceccf6)
+![WhatsApp Image 2025-06-17 at 11 48 56 PM (1)](https://github.com/user-attachments/assets/798721b4-6bed-4ab1-aa82-21e339e84026)
+![WhatsApp Image 2025-06-17 at 11 48 56 PM (2)](https://github.com/user-attachments/assets/7fb257e5-a9e0-48e8-8ba2-d7b7ff543137)
 
-https://github.com/user-attachments/assets/32952a13-09d6-403b-bc0d-3d71e7d9bc47
+
+
+https://github.com/user-attachments/assets/731d8b90-1c12-494b-a66d-4acf38d488cb
+
 
