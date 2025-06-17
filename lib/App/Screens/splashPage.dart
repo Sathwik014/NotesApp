@@ -17,14 +17,14 @@ class _SplashState extends State<Splash> {
   void initState() {
     super.initState();
 
-    // Trigger fade-in animation
+    // 👇 Trigger fade-in animation after a short delay
     Future.delayed(const Duration(milliseconds: 200), () {
       setState(() {
         _opacity = 1.0;
       });
     });
 
-    // Navigate to HomePage after 3 seconds
+    // ⏳ Navigate to Decider_Page after 2 seconds
     Timer(const Duration(seconds: 2), () {
       Navigator.pushReplacement(
         context,
@@ -36,15 +36,15 @@ class _SplashState extends State<Splash> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.black, // Dark background for splash
       body: Center(
         child: AnimatedOpacity(
           opacity: _opacity,
-          duration: const Duration(seconds: 2),
+          duration: const Duration(seconds: 2), // Smooth fade-in
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Lottie animation at the top
+              // 🎞️ Lottie animation
               SizedBox(
                 width: 200,
                 height: 200,
@@ -54,7 +54,7 @@ class _SplashState extends State<Splash> {
                 ),
               ),
               const SizedBox(height: 16),
-              // App title text
+              // 📝 App quote
               const Text(
                 "We Listen But We Don't Judge",
                 style: TextStyle(

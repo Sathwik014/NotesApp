@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_app/App/Widgets/TextField.dart';
 import 'note_editor.dart';
 
+/// Popup dialog for creating a new note before navigating to the NoteEditor page
 class NotePopup extends StatefulWidget {
   const NotePopup({super.key});
 
@@ -10,10 +11,14 @@ class NotePopup extends StatefulWidget {
 }
 
 class _NotePopupState extends State<NotePopup> {
+  // Controllers for title and description text fields
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+
+  // Holds the selected date for the note
   DateTime selectedDate = DateTime.now();
 
+  /// 📅 Function to show date picker and update the selectedDate
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -28,6 +33,7 @@ class _NotePopupState extends State<NotePopup> {
     }
   }
 
+  /// ✅ Validate and Navigate to NoteEditor with prefilled values
   void _saveAndNavigate() {
     final title = titleController.text.trim();
     final description = descriptionController.text.trim();
@@ -39,9 +45,9 @@ class _NotePopupState extends State<NotePopup> {
       return;
     }
 
-    Navigator.of(context).pop(); // close popup first
+    Navigator.of(context).pop(); // Close the popup first
 
-    // Now navigate to NoteEditor
+    // Navigate to NoteEditor with provided inputs
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => NoteEditor(
@@ -58,37 +64,50 @@ class _NotePopupState extends State<NotePopup> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: const Text("New Note", style: TextStyle(fontWeight: FontWeight.bold)),
+
+      /// 📦 Main content section of popup
       content: SingleChildScrollView(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // Title field
             Text_Field(controller: titleController, hintText: 'Title'),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
+
+            // Description field
             Text_Field(controller: descriptionController, hintText: "Description"),
-            const SizedBox(height: 20,),
+            const SizedBox(height: 20),
+
+            // 📅 Date Picker
             TextButton.icon(
-                style: TextButton.styleFrom(backgroundColor:Colors.blue[300]),
-                onPressed: () => _selectDate(context),
-                icon: const Icon(Icons.calendar_today,color: Colors.white),
-                label: Text("Date: ${selectedDate.toLocal().toString().split(' ')[0]}",
-                            style: TextStyle(color: Colors.white)),
+              style: TextButton.styleFrom(backgroundColor: Colors.blue[300]),
+              onPressed: () => _selectDate(context),
+              icon: const Icon(Icons.calendar_today, color: Colors.white),
+              label: Text(
+                "Date: ${selectedDate.toLocal().toString().split(' ')[0]}",
+                style: TextStyle(color: Colors.white),
               ),
+            ),
           ],
         ),
       ),
+
+      /// 🛠️ Action Buttons
       actions: [
+        // Cancel button
         TextButton(
-          style: TextButton.styleFrom(backgroundColor:Colors.red),
+          style: TextButton.styleFrom(backgroundColor: Colors.red),
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text("Cancel",style: TextStyle(color: Colors.white),),
+          child: const Text("Cancel", style: TextStyle(color: Colors.white)),
         ),
+
+        // Save & Navigate button
         ElevatedButton(
-          style: TextButton.styleFrom(backgroundColor:Colors.green),
+          style: TextButton.styleFrom(backgroundColor: Colors.green),
           onPressed: _saveAndNavigate,
-          child: const Text("Save",style: TextStyle(color: Colors.white),),
+          child: const Text("Save", style: TextStyle(color: Colors.white)),
         ),
       ],
     );
   }
 }
-

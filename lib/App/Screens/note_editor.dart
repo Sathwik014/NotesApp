@@ -3,11 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
+/// 🧾 This is the editor screen used for creating or editing a note.
 class NoteEditor extends StatefulWidget {
-  final DocumentSnapshot? note;
-  final String? prefilledTitle;
-  final String? prefilledContent;
-  final DateTime? prefilledDate;
+  final DocumentSnapshot? note; // Existing note to edit (if any)
+  final String? prefilledTitle; // Title prefilled from NotePopup
+  final String? prefilledContent; // Content (not used now)
+  final DateTime? prefilledDate; // Date from NotePopup
 
   NoteEditor({this.note, this.prefilledTitle, this.prefilledContent, this.prefilledDate});
 
@@ -16,17 +17,22 @@ class NoteEditor extends StatefulWidget {
 }
 
 class _NoteEditorState extends State<NoteEditor> {
+  // 🔤 Text controllers for title and content input
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
 
+  // 🎯 Focus node for content TextField
   final FocusNode _contentFocus = FocusNode();
 
-  String _selectedCategory = 'work';
-  DateTime _noteDate = DateTime.now();
-  bool _isPinned = false;
+  // 🏷️ Note meta
+  String _selectedCategory = 'work'; // Default category
+  DateTime _noteDate = DateTime.now(); // Default to current date
+  bool _isPinned = false; // Pinned toggle
 
+  // 📂 Available categories
   final List<String> _categories = ['work', 'study', 'fitness', 'coding', 'to-do'];
 
+  // 🖼️ Icons for each category
   final Map<String, IconData> _categoryIcons = {
     'work': Icons.work,
     'study': Icons.book,
@@ -35,11 +41,13 @@ class _NoteEditorState extends State<NoteEditor> {
     'to-do': Icons.check_circle,
   };
 
+  // 🎨 Text color state
   Color _selectedTextColor = Colors.white;
 
   @override
   void initState() {
     super.initState();
+    // If editing an existing note
     if (widget.note != null) {
       final data = widget.note!.data() as Map<String, dynamic>;
       _titleController.text = data['title'] ?? '';
@@ -48,12 +56,14 @@ class _NoteEditorState extends State<NoteEditor> {
       _noteDate = (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now();
       _isPinned = data['pinned'] ?? false;
     } else {
+      // If creating a new note with prefilled values
       _titleController.text = widget.prefilledTitle ?? '';
       _contentController.text = widget.prefilledContent ?? '';
       _noteDate = widget.prefilledDate ?? DateTime.now();
     }
   }
 
+  /// 💾 Save the note to Firestore (create or update)
   Future<void> saveNote() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
     final notesRef = FirebaseFirestore.instance
@@ -71,14 +81,15 @@ class _NoteEditorState extends State<NoteEditor> {
     };
 
     if (widget.note == null) {
-      await notesRef.add(data);
+      await notesRef.add(data); // Add new note
     } else {
-      await notesRef.doc(widget.note!.id).update(data);
+      await notesRef.doc(widget.note!.id).update(data); // Update existing note
     }
 
-    Navigator.pop(context);
+    Navigator.pop(context); // Go back to previous screen
   }
 
+  /// 🔤 Wrap selected text in markdown syntax
   void insertMarkdown(String syntax) {
     final text = _contentController.text;
     final selection = _contentController.selection;
@@ -93,6 +104,7 @@ class _NoteEditorState extends State<NoteEditor> {
     );
   }
 
+  /// 🎨 Change text color
   void applyColorToSelectedText(Color color) {
     setState(() {
       _selectedTextColor = color;
@@ -101,16 +113,18 @@ class _NoteEditorState extends State<NoteEditor> {
 
   @override
   Widget build(BuildContext context) {
-    final formattedDate = DateFormat('EEEE, MMM d').format(_noteDate);
+    final formattedDate = DateFormat('EEEE, MMM d').format(_noteDate); // e.g. Monday, Jun 17
 
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.note != null ? 'Edit Note' : 'New Note'),
         actions: [
+          // 📌 Pin icon toggle
           IconButton(
             icon: Icon(_isPinned ? Icons.push_pin : Icons.push_pin_outlined),
             onPressed: () => setState(() => _isPinned = !_isPinned),
           ),
+          // ✅ Save icon
           IconButton(icon: Icon(Icons.check), onPressed: saveNote),
         ],
       ),
@@ -118,7 +132,7 @@ class _NoteEditorState extends State<NoteEditor> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            /// 🔽 Category Dropdown + Date
+            /// 🔽 Category selector & Date
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               margin: EdgeInsets.only(bottom: 12),
@@ -129,6 +143,7 @@ class _NoteEditorState extends State<NoteEditor> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // 📂 Category Dropdown
                   DropdownButtonHideUnderline(
                     child: DropdownButton<String>(
                       value: _selectedCategory,
@@ -151,12 +166,13 @@ class _NoteEditorState extends State<NoteEditor> {
                       onChanged: (value) => setState(() => _selectedCategory = value!),
                     ),
                   ),
+                  // 📅 Date text
                   Text(formattedDate, style: TextStyle(fontSize: 14, color: Colors.black87)),
                 ],
               ),
             ),
 
-            /// 📝 Title
+            /// 📝 Title input
             TextField(
               controller: _titleController,
               decoration: InputDecoration(hintText: 'Title'),
@@ -164,7 +180,7 @@ class _NoteEditorState extends State<NoteEditor> {
             ),
             SizedBox(height: 12),
 
-            /// 🧾 Content Field
+            /// 🧾 Content input
             Expanded(
               child: TextField(
                 focusNode: _contentFocus,
@@ -180,7 +196,7 @@ class _NoteEditorState extends State<NoteEditor> {
               ),
             ),
 
-            /// 🧰 Toolbar
+            /// 🧰 Markdown Toolbar
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               margin: EdgeInsets.only(top: 12),
@@ -191,7 +207,7 @@ class _NoteEditorState extends State<NoteEditor> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  /// ✏️ Edit dropdown
+                  /// ✏️ Markdown options
                   PopupMenuButton<String>(
                     icon: Icon(Icons.edit, color: Colors.white),
                     onSelected: (value) {
@@ -208,7 +224,7 @@ class _NoteEditorState extends State<NoteEditor> {
                     ],
                   ),
 
-                  /// 🎨 Color picker dropdown
+                  /// 🎨 Text color dropdown
                   PopupMenuButton<Color>(
                     icon: Icon(Icons.color_lens, color: Colors.white),
                     onSelected: applyColorToSelectedText,
@@ -222,6 +238,7 @@ class _NoteEditorState extends State<NoteEditor> {
                     ],
                   ),
 
+                  // 📸 Placeholder icon buttons
                   IconButton(icon: Icon(Icons.camera_alt, color: Colors.white), onPressed: () {}),
                   IconButton(icon: Icon(Icons.copy_rounded, color: Colors.white), onPressed: () {}),
                   IconButton(icon: Icon(Icons.add_box, color: Colors.white), onPressed: () {}),
@@ -234,7 +251,7 @@ class _NoteEditorState extends State<NoteEditor> {
     );
   }
 
-  /// 👁️ Helper widget for showing color in dropdown
+  /// 👁️ Circle UI used to show color options
   Widget colorCircle(Color color) {
     return Container(
       width: 24,

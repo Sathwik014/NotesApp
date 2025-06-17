@@ -4,8 +4,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 class ProfilePage extends StatelessWidget {
   const ProfilePage({super.key});
 
+  // 🔓 Firebase Sign Out Function
   void _signOut(BuildContext context) async {
     await FirebaseAuth.instance.signOut();
+
+    // 🧭 Redirect to LoginPage after logout
     Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
@@ -14,7 +17,7 @@ class ProfilePage extends StatelessWidget {
     final User? user = FirebaseAuth.instance.currentUser;
 
     final screenWidth = MediaQuery.of(context).size.width;
-    final avatarSize = screenWidth * 0.3; // 30% of screen width for profile image
+    final avatarSize = screenWidth * 0.3; // Avatar is 30% of screen width
 
     return Scaffold(
       appBar: AppBar(centerTitle: true, title: const Text("Profile")),
@@ -23,9 +26,9 @@ class ProfilePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
 
-            // 🔵 Circular Avatar with fallback image
+            // 🖼️ Profile picture (Google photo or fallback)
             CircleAvatar(
               radius: avatarSize / 2,
               backgroundImage: user?.photoURL != null
@@ -36,7 +39,7 @@ class ProfilePage extends StatelessWidget {
 
             const SizedBox(height: 20),
 
-            // 🧑 Display name or fallback
+            // 👤 Display Name (if available)
             Text(
               user?.displayName ?? "User",
               style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
@@ -45,24 +48,31 @@ class ProfilePage extends StatelessWidget {
             const SizedBox(height: 10),
             const Divider(height: 30),
 
-            // 📧 Email
+            // 📧 Email info
             ListTile(
               leading: const Icon(Icons.email),
               title: Text(user?.email ?? "No email"),
             ),
 
+            // 👨 Profession - Hardcoded for now
             const ListTile(
               leading: Icon(Icons.work_outline),
               title: Text("Profession: Student"),
             ),
+
+            // 📅 Static joining info
             const ListTile(
               leading: Icon(Icons.calendar_today),
               title: Text("Joined on: June 15, 2024"),
             ),
+
+            // ✅ Verified status
             const ListTile(
               leading: Icon(Icons.verified),
               title: Text("Account Status: Verified"),
             ),
+
+            // 🔧 App version
             const ListTile(
               leading: Icon(Icons.update),
               title: Text("App Version: 1.0.0"),
@@ -70,7 +80,7 @@ class ProfilePage extends StatelessWidget {
 
             const Spacer(),
 
-            // 🔘 Logout Button
+            // 🚪 Logout button
             ElevatedButton.icon(
               onPressed: () => _signOut(context),
               icon: const Icon(Icons.logout, color: Colors.white),
@@ -81,7 +91,8 @@ class ProfilePage extends StatelessWidget {
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.green[600],
                 padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.2, vertical: 14,
+                  horizontal: screenWidth * 0.2,
+                  vertical: 14,
                 ),
               ),
             ),

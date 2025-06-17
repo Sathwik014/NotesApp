@@ -3,18 +3,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notes_app/Authentication/Components/Button.dart';
 import 'package:notes_app/Authentication/Components/TextField.dart';
 import 'package:lottie/lottie.dart';
-
 import '../Components/ErrorMessage.dart';
 
 class Register_Page extends StatelessWidget {
   final void Function()? onTap;
+
   Register_Page({super.key, required this.onTap});
 
+  // Controllers to collect input
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
 
-  void registerUser(BuildContext context ) async {
+  // Function to create a new user
+  void registerUser(BuildContext context) async {
     if (passwordController.text != confirmPasswordController.text) {
       displayError(context, "Passwords do not match");
       return;
@@ -26,7 +28,7 @@ class Register_Page extends StatelessWidget {
         password: passwordController.text,
       );
     } catch (e) {
-      displayError(context, 'Registration Error: \$e');
+      displayError(context, 'Registration Error: $e');
     }
   }
 
@@ -37,11 +39,13 @@ class Register_Page extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // Animated logo
             Padding(
               padding: const EdgeInsets.all(20),
               child: Lottie.asset('assets/animations/logo.json', width: 300, height: 300),
             ),
 
+            // Email input field
             MyTextField(
               controller: emailController,
               hintText: "Email",
@@ -49,6 +53,7 @@ class Register_Page extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
+            // Password input field
             MyTextField(
               controller: passwordController,
               hintText: "Password",
@@ -56,16 +61,19 @@ class Register_Page extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
+            // Confirm password input
             MyTextField(
               controller: confirmPasswordController,
               hintText: "Confirm Password",
               obscureText: true,
             ),
-
             const SizedBox(height: 25),
-            MyButton(text: "Register", onTap:() => registerUser(context)),
 
+            // Register button
+            MyButton(text: "Register", onTap: () => registerUser(context)),
             const SizedBox(height: 15),
+
+            // Switch to login
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [

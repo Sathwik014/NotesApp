@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// 🔤 Custom Text Field widget used across app
 class Text_Field extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -21,6 +22,8 @@ class Text_Field extends StatelessWidget {
           fillColor: Colors.black,
           filled: true,
           hintStyle: TextStyle(color: Colors.grey[700]),
+
+          /// 🔲 Borders
           enabledBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.grey),
           ),

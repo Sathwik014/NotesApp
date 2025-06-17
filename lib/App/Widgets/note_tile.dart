@@ -4,10 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Screens/note_editor.dart';
 import 'package:intl/intl.dart';
 
+/// 🗒️ NoteTile displays an individual note in the grid view on HomePage.
 class NoteTile extends StatelessWidget {
   final QueryDocumentSnapshot note;
+
   NoteTile({required this.note});
 
+  /// 🎨 List of random background colors for notes
   final List<Color> tileColors = [
     Colors.orange.shade100,
     Colors.blue.shade100,
@@ -23,6 +26,7 @@ class NoteTile extends StatelessWidget {
     Colors.deepPurple.shade100,
   ];
 
+  /// 🏷️ Category icons based on note type
   final Map<String, IconData> categoryIcons = {
     'work': Icons.work,
     'study': Icons.book,
@@ -33,13 +37,20 @@ class NoteTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 🎨 Random background color for this tile
     final color = tileColors[Random().nextInt(tileColors.length)];
+
+    // 📄 Get data from the Firestore document
     final data = note.data() as Map<String, dynamic>;
 
+    // 🏷️ Extract and normalize category
     final String category = (data['category'] ?? 'work').toString().toLowerCase().trim();
     final icon = categoryIcons[category] ?? Icons.note;
+
+    // 📌 Check if note is pinned
     final bool isPinned = data['pinned'] ?? false;
 
+    // 🕓 Format the timestamp
     final Timestamp? timestamp = data['timestamp'];
     final String formattedTime = timestamp != null
         ? DateFormat('MMM d, h:mm a').format(timestamp.toDate())
@@ -47,6 +58,7 @@ class NoteTile extends StatelessWidget {
 
     return GestureDetector(
       onTap: () {
+        /// 👉 Navigate to NoteEditor when tile is tapped
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -63,9 +75,10 @@ class NoteTile extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Top row: title and delete button
+            /// 🔝 Top row: Title and Delete Button
             Row(
               children: [
+                // 📝 Note title
                 Expanded(
                   child: Text(
                     data['title'] ?? '',
@@ -73,25 +86,29 @@ class NoteTile extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                // 🗑️ Delete icon
                 IconButton(
                   icon: Icon(Icons.delete, color: Colors.grey[900]),
                   onPressed: () {
+                    // 🧾 Show confirmation dialog
                     showDialog(
                       context: context,
                       builder: (_) => AlertDialog(
                         title: Text('Confirm Delete'),
                         content: Text('Delete "${data['title']}"?'),
                         actions: [
+                          // ❌ Cancel
                           TextButton(
                             onPressed: () => Navigator.pop(context),
                             child: Text("Cancel"),
                           ),
+                          // ✅ Confirm Delete
                           TextButton(
                             onPressed: () async {
-                              Navigator.pop(context);
+                              Navigator.pop(context); // Close dialog
                               await FirebaseFirestore.instance
                                   .collection('users')
-                                  .doc(data['userId'])
+                                  .doc(data['userId']) // 🔒 User-specific note
                                   .collection('notes')
                                   .doc(note.id)
                                   .delete();
@@ -108,7 +125,7 @@ class NoteTile extends StatelessWidget {
 
             SizedBox(height: 6),
 
-            // Content
+            /// 📄 Note content
             Expanded(
               child: Text(
                 data['content'] ?? '',
@@ -118,25 +135,29 @@ class NoteTile extends StatelessWidget {
                 softWrap: true,
               ),
             ),
+
             SizedBox(height: 6),
 
-            // Category row
+            /// 🔖 Category and Timestamp Row
             Row(
               children: [
                 Icon(icon, size: 12, color: Colors.black),
                 SizedBox(width: 4),
+                // 🏷️ Category label
                 Text(
                   category[0].toUpperCase() + category.substring(1),
                   style: TextStyle(fontStyle: FontStyle.italic, fontSize: 10, color: Colors.black),
                 ),
                 Spacer(),
+                // 🕓 Timestamp
                 Text(
                   formattedTime,
                   style: TextStyle(fontSize: 10, color: Colors.black),
                 ),
+                // 📌 Pinned icon (if note is pinned)
                 if (isPinned)
                   Padding(
-                    padding: const EdgeInsets.only(left: 4.0,right: 2.0),
+                    padding: const EdgeInsets.only(left: 4.0, right: 2.0),
                     child: Icon(Icons.push_pin, size: 14, color: Colors.black),
                   ),
               ],
