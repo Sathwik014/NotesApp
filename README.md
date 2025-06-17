@@ -64,12 +64,13 @@ It also supports features like **pinning**, **category filters**, **Markdown con
 ### ⚠️ Firebase Field Errors
 **Problem:** Missing Firestore fields caused runtime errors.  
 **Fix:** Used null-aware operators: `data['key'] ?? defaultValue`.
+![WhatsApp Image 2025-06-17 at 11 48 56 PM (2)](https://github.com/user-attachments/assets/392ef0cb-e41b-4b5e-8db3-6284e2776355)
+![WhatsApp Image 2025-06-17 at 11 48 56 PM (1)](https://github.com/user-attachments/assets/0d6aa876-448c-4234-8eef-92b95b9277c2)
+![WhatsApp Image 2025-06-17 at 11 48 56 PM](https://github.com/user-attachments/assets/a6394d40-aa68-4bff-ba66-d353178c822a)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM (3)](https://github.com/user-attachments/assets/7c354832-61ea-4bc8-8dff-acc6daf0a34b)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM (2)](https://github.com/user-attachments/assets/211a84ad-a46c-4565-a716-570c6c2cbe09)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM (1)](https://github.com/user-attachments/assets/703ff595-5575-4e27-90da-ac3f20825cf3)
+![WhatsApp Image 2025-06-17 at 11 48 55 PM](https://github.com/user-attachments/assets/d983aa15-c2a5-4654-b881-f4aa459db3fd)
 
-![WhatsApp Image 2025-06-17 at 11 48 56 PM (2)](https://github.com/user-attachments/assets/07b160bf-0ecd-48c0-a850-70d6e7ebdc22)
-![WhatsApp Image 2025-06-17 at 11 48 56 PM (1)](https://github.com/user-attachments/assets/4142d902-e111-49c0-a32f-c99d223e6c05)
-![WhatsApp Image 2025-06-17 at 11 48 56 PM](https://github.com/user-attachments/assets/5a689262-f393-4f23-8250-1d509d4c7bbd)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (3)](https://github.com/user-attachments/assets/16112188-913e-42ef-b9d2-1b4b8d3394ff)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (2)](https://github.com/user-attachments/assets/a7b59940-ec27-4630-aeab-77a087ce087d)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (1)](https://github.com/user-attachments/assets/9b5b586a-7010-4ea0-be6b-72283e01987a)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM (1)](https://github.com/user-attachments/assets/b25f6baf-d0ea-4639-8516-0a925867e52e)
-![WhatsApp Image 2025-06-17 at 11 48 55 PM](https://github.com/user-attachments/assets/11c70fd1-c667-4885-a14d-93595c9afe4e)
+https://github.com/user-attachments/assets/32952a13-09d6-403b-bc0d-3d71e7d9bc47
+
