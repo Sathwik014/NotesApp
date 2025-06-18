@@ -6,16 +6,23 @@ import 'package:notes_app/Authentication/Components/ErrorMessage.dart';
 import 'package:notes_app/Authentication/Components/TextField.dart';
 import 'package:notes_app/Authentication/services/google_auth.dart';
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
   final void Function()? onTap;
 
-  LoginPage({super.key, required this.onTap});
+  const LoginPage({super.key, required this.onTap});
 
-  // Controllers for email and password input fields
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  // Function to handle email/password sign-in
+  // 👇 Loader control for Google sign-in
+  Future<UserCredential?>? _googleSignInFuture;
+
+  // Email/Password Sign-In
   void signInUser(BuildContext context) async {
     try {
       await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -23,7 +30,6 @@ class LoginPage extends StatelessWidget {
         password: passwordController.text,
       );
     } on FirebaseAuthException catch (e) {
-      // Handle specific Firebase auth errors
       String errorMsg;
       switch (e.code) {
         case 'user-not-found':
@@ -54,13 +60,12 @@ class LoginPage extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Animated logo
             Padding(
               padding: const EdgeInsets.all(30),
               child: Lottie.asset('assets/animations/logo.json', width: 300, height: 300),
             ),
 
-            // Email input field
+            // 🔤 Email
             MyTextField(
               controller: emailController,
               hintText: "UserName",
@@ -68,7 +73,7 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Password input field
+            // 🔑 Password
             MyTextField(
               controller: passwordController,
               hintText: "Password",
@@ -76,14 +81,13 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 25),
 
-            // Blue "Sign In" button
+            // 🔵 Sign In Button
             MyButton(
               text: "Sign In",
               onTap: () => signInUser(context),
             ),
             const SizedBox(height: 20),
 
-            // Divider with text
             Row(
               children: [
                 const Expanded(child: Divider(color: Colors.grey)),
@@ -96,33 +100,42 @@ class LoginPage extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Google Sign-In button
-            Padding(
-              padding: const EdgeInsets.all(15),
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  final user = await signInWithGoogle();
-                  if (user == null) {
-                    displayError(context, "Google sign-in failed. Please try again.");
-                  }
-                },
-                icon: Image.asset("assets/animations/google.jpg", height: 24),
-                label: const Text("Sign in with Google", style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.black12,
-                  padding: const EdgeInsets.symmetric(horizontal: 110, vertical: 15),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                ),
-              ),
+            // 🔄 Google Sign-In with FutureBuilder Loader
+            FutureBuilder<UserCredential?>(
+              future: _googleSignInFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator(); // ⏳ Show loader
+                } else if (snapshot.hasError) {
+                  displayError(context, "Google sign-in failed. Please try again.");
+                }
+                return Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      setState(() {
+                        _googleSignInFuture = signInWithGoogle();
+                      });
+                    },
+                    icon: Image.asset("assets/animations/google.jpg", height: 24),
+                    label: const Text("Sign in with Google", style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black12,
+                      padding: const EdgeInsets.symmetric(horizontal: 110, vertical: 15),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                  ),
+                );
+              },
             ),
 
-            // Navigation to register page
+            // 🔁 Switch to Register
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text("Not a member?"),
                 GestureDetector(
-                  onTap: onTap,
+                  onTap: widget.onTap,
                   child: const Text(
                     " Register now",
                     style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),

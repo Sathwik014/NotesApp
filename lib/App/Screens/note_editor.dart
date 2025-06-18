@@ -65,28 +65,43 @@ class _NoteEditorState extends State<NoteEditor> {
 
   /// 💾 Save the note to Firestore (create or update)
   Future<void> saveNote() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    final notesRef = FirebaseFirestore.instance
-        .collection('users')
-        .doc(uid)
-        .collection('notes');
+    // Show loader while saving
+    showDialog(
+      context: context,
+      barrierDismissible: false, // Prevent dismissing by tapping outside
+      builder: (context) => const Center(child: CircularProgressIndicator()),
+    );
 
-    final data = {
-      'title': _titleController.text,
-      'content': _contentController.text,
-      'timestamp': Timestamp.fromDate(_noteDate),
-      'userId': uid,
-      'category': _selectedCategory,
-      'pinned': _isPinned,
-    };
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final notesRef = FirebaseFirestore.instance
+          .collection('users')
+          .doc(uid)
+          .collection('notes');
 
-    if (widget.note == null) {
-      await notesRef.add(data); // Add new note
-    } else {
-      await notesRef.doc(widget.note!.id).update(data); // Update existing note
+      final data = {
+        'title': _titleController.text,
+        'content': _contentController.text,
+        'timestamp': Timestamp.fromDate(_noteDate),
+        'userId': uid,
+        'category': _selectedCategory,
+        'pinned': _isPinned,
+      };
+
+      if (widget.note == null) {
+        await notesRef.add(data); // Add new note
+      } else {
+        await notesRef.doc(widget.note!.id).update(data); // Update existing note
+      }
+
+      Navigator.pop(context); // Remove loader
+      Navigator.pop(context); // Go back to previous screen
+    } catch (e) {
+      Navigator.pop(context); // Remove loader
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text("Failed to save note: $e")),
+      );
     }
-
-    Navigator.pop(context); // Go back to previous screen
   }
 
   /// 🔤 Wrap selected text in markdown syntax

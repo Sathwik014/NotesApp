@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:notes_app/App/Screens/profilePage.dart';
 import 'package:notes_app/App/Widgets/note_tile.dart';
 import 'package:notes_app/App/Screens/CalenderPage.dart';
+import 'package:notes_app/Authentication/Screens/Switch_Page.dart';
 import 'note_popup.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 
@@ -18,6 +19,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController _searchController = TextEditingController(); // 🔍 Search field controller
   String searchText = ""; // 📥 Stores search input
   String selectedCategory = 'All'; // 🔖 Current selected filter category
+
 
   // 🧾 Categories for filtering notes
   final List<String> categories = ['All', 'work', 'study', 'fitness', 'coding', 'to-do'];
@@ -45,9 +47,30 @@ class _HomePageState extends State<HomePage> {
             icon: const Icon(Icons.exit_to_app),
             tooltip: "Logout",
             onPressed: () async {
-              await FirebaseAuth.instance.signOut();
-              Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+              // 🔃 Show loader
+              showDialog(
+                context: context,
+                barrierDismissible: false,
+                builder: (context) => const Center(child: CircularProgressIndicator()),
+              );
+
+              try {
+                await FirebaseAuth.instance.signOut();
+
+                // ✅ Remove loader and navigate to LoginPage directly
+                Navigator.of(context).pop(); // remove loader
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => SwitchPages()),
+                      (route) => false,
+                );
+              } catch (e) {
+                Navigator.of(context).pop(); // remove loader
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text("Logout failed: $e")),
+                );
+              }
             },
+
           ),
           // ⚙️ Settings icon (non-functional placeholder)
           const Padding(
